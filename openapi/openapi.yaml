@@ -10,7 +10,7 @@ info:
     name: Apache 2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
   x-logo:
-    url: 'https://redocly.github.io/openapi-template/logo.png'
+    url: 'https://raw.githubusercontent.com/wiresecure/verify-api/main/openapi/web/logo.png'
   description: >
     This is an **example** API to demonstrate features of OpenAPI specification
 
