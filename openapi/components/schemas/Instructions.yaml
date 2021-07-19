@@ -1,0 +1,28 @@
+title: Instructions
+type: object
+description: Detailed bank instructions that can be used to generate wire or ACH payment information.
+properties:
+  nameOnAccount:
+    type: string
+    description: 'The name that is associated with the account, this must match exactly. This is what you see in the upper left corner of check - e.g. `SMITH FAMILY TRUST LLC` or `JOHN T SMITH`'
+  bankCode:
+    type: string
+    description: The ABA or SWIFT bank ID code
+  accountNumber:
+    type: string
+  beneficiaryAddress:
+    type: string
+    description: The address associated with this account
+  ffc:
+    type: string
+    description: Optional `For Further Credit` information
+  intermediaryBankCode:
+    type: string
+    description: The ABA or SWIFT code if there is an intermediary bank
+  intermediaryAccountNumber:
+    type: string
+    description: The account number at the intermediary bank
+required:
+  - nameOnAccount
+  - bankCode
+  - accountNumber

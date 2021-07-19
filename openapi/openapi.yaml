@@ -5,9 +5,7 @@ info:
   contact:
     email: eng@wirescure.com
     name: WireSecure Engineering
-  license:
-    name: Apache 2.0
-    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+  license: {}
   x-logo:
     url: 'https://raw.githubusercontent.com/wiresecure/verify-api/main/openapi/web/logo.png'
   description: |
@@ -21,14 +19,8 @@ servers:
   - url: 'https://verify-api-sandbox.wiresecure.com'
     description: SANDBOX
 paths:
-  '/verify/{id}':
-    parameters:
-      - schema:
-          type: string
-        name: id
-        in: path
-        required: true
-        description: The verification request to retrieve
+  /verify:
+    parameters: []
     post:
       summary: Create a verification request
       operationId: post-verify
@@ -66,21 +58,7 @@ paths:
                   type: object
                   description: This metadata will be returned back when retrieving this verification is unused by WireSecure. It can be any valid JSON object.
                 instructions:
-                  type: object
-                  description: 'If instructions are provided, the user will just be asked to confirm them. No government ID verification will be requested, just mobile verification.'
-                  properties:
-                    bankCode:
-                      type: string
-                    accountName:
-                      type: string
-                    accountNumber:
-                      type: string
-                    ffc:
-                      type: string
-                    intermediaryBankCode:
-                      type: string
-                    intermediaryAccountNumber:
-                      type: string
+                  $ref: ./components/schemas/Instructions.yaml
               required:
                 - name
                 - emailAddress
@@ -101,18 +79,30 @@ paths:
                 properties:
                   id:
                     type: string
+                  createdAt:
+                    type: string
+                    description: JS Date string
+                  instructions:
+                    $ref: ./components/schemas/Instructions.yaml
                   providedBy:
                     type: object
                   confirmedBy:
                     type: object
-                  instructions:
-                    type: object
+      description: Retrieve verified instructions
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: id
+          description: the ID of the verification request to retrieve
+          required: true
 components:
   securitySchemes:
     api_key:
       type: apiKey
       in: header
       name: api_key
+      description: The api key provided to you by WireSecure
 security:
   - api_key: []
 tags:
