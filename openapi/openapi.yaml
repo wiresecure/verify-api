@@ -75,19 +75,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                  createdAt:
-                    type: string
-                    description: JS Date string
-                  instructions:
-                    $ref: ./components/schemas/Instructions.yaml
-                  providedBy:
-                    type: object
-                  confirmedBy:
-                    type: object
+                $ref: '#/components/schemas/Confirmation'
       description: Retrieve verified instructions
       parameters:
         - schema:
@@ -103,6 +91,295 @@ components:
       in: header
       name: api_key
       description: The api key provided to you by WireSecure
+  schemas:
+    Confirmation:
+      description: The result of a verification request.
+      type: object
+      properties:
+        id:
+          type: string
+          minLength: 1
+        client_metadata:
+          type: object
+          properties:
+            internal_id:
+              type: string
+              minLength: 1
+            group_id:
+              type: string
+              minLength: 1
+          required:
+            - internal_id
+            - group_id
+        wire_instructions:
+          type: object
+          properties:
+            bank_name:
+              type: string
+              minLength: 1
+            bank_id_code:
+              type: string
+              minLength: 1
+            id_code_type:
+              type: string
+              minLength: 1
+            name_on_account:
+              type: string
+              minLength: 1
+            beneficiary_address:
+              type: string
+              minLength: 1
+            account_number:
+              type: string
+              minLength: 1
+            ffc:
+              type: string
+              minLength: 1
+            intermediary_bank_name:
+              type: string
+              minLength: 1
+            intermediary_bank_id_code:
+              type: string
+              minLength: 1
+            intermediary_bank_id_code_type:
+              type: string
+              minLength: 1
+            intermediary_bank_account_number:
+              type: string
+              minLength: 1
+            provided_by:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                legal_name:
+                  type: string
+                  minLength: 1
+                email_address:
+                  type: string
+                  minLength: 1
+                phone_number:
+                  type: string
+                  minLength: 1
+                status:
+                  type: string
+                  minLength: 1
+                at:
+                  type: string
+                  minLength: 1
+                from:
+                  type: string
+                  minLength: 1
+                verification_details:
+                  type: object
+                  properties:
+                    mobile_provided:
+                      type: boolean
+                    mobile_risk_score:
+                      type: number
+                    id_provided:
+                      type: boolean
+                    id_risk_score:
+                      type: number
+                    name_match:
+                      type: number
+                    flags:
+                      type: array
+                      items:
+                        required: []
+                        properties: {}
+                  required:
+                    - mobile_provided
+                    - mobile_risk_score
+                    - id_provided
+                    - id_risk_score
+                    - name_match
+                    - flags
+              required:
+                - name
+                - legal_name
+                - email_address
+                - phone_number
+                - status
+                - at
+                - from
+                - verification_details
+            confirmed_by:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                legal_name:
+                  type: string
+                  minLength: 1
+                email_address:
+                  type: string
+                  minLength: 1
+                phone_number:
+                  type: string
+                  minLength: 1
+                status:
+                  type: string
+                  minLength: 1
+                at:
+                  type: string
+                  minLength: 1
+                from:
+                  type: string
+                  minLength: 1
+                verification_details:
+                  type: object
+                  properties:
+                    mobile_provided:
+                      type: boolean
+                    mobile_risk_score:
+                      type: number
+                    id_provided:
+                      type: boolean
+                    id_risk_score:
+                      type: number
+                    name_match:
+                      type: number
+                    flags:
+                      type: array
+                      items:
+                        required: []
+                        properties: {}
+                  required:
+                    - mobile_provided
+                    - mobile_risk_score
+                    - id_provided
+                    - id_risk_score
+                    - name_match
+                    - flags
+              required:
+                - name
+                - legal_name
+                - email_address
+                - phone_number
+                - status
+                - at
+                - from
+                - verification_details
+          required:
+            - bank_name
+            - bank_id_code
+            - id_code_type
+            - name_on_account
+            - beneficiary_address
+            - account_number
+            - ffc
+            - intermediary_bank_name
+            - intermediary_bank_id_code
+            - intermediary_bank_id_code_type
+            - intermediary_bank_account_number
+            - provided_by
+            - confirmed_by
+      required:
+        - id
+        - client_metadata
+        - wire_instructions
+      x-examples:
+        Example where instructions were already provided:
+          id: qyiyyPTZB9g
+          client_metadata:
+            internal_id: '309182313'
+            group_id: ds839jdad
+          wire_instructions:
+            bank_name: JP MORGAN CHASE
+            bank_id_code: '021000021'
+            id_code_type: ABA
+            name_on_account: Smith Family Trust LLC
+            beneficiary_address: '3624 Dauphine St, New Orleans, LA 70117'
+            account_number: '103983019283'
+            ffc: FBO acct 3020449390-B
+            intermediary_bank_name: BANQUE DE SAVOIE S.A.
+            intermediary_bank_id_code: BSAVFR2C
+            intermediary_bank_id_code_type: SWIFT
+            intermediary_bank_account_number: '1120897764'
+            provided_by:
+              name: Ali Someperson
+              legal_name: ALLISON KATHRYN SOMEPERSON
+              email_address: alice@familyoffice.com
+              phone_number: '+12125551212'
+              status: PASSED
+              at: '2021-07-28 18:15 EST'
+              from: 'New York, NY USA'
+              verification_details:
+                mobile_provided: true
+                mobile_risk_score: 0.12
+                id_provided: true
+                id_risk_score: 0.08
+                name_match: 0.92
+                flags: []
+            confirmed_by:
+              name: John Smith
+              legal_name: JONATHAN WINGATE SMITH
+              email_address: john.smith@gmail.com
+              phone_number: '+12125551213'
+              status: PASSED
+              at: '2021-07-29 15:12 EST'
+              from: 'Metarie, LA USA'
+              verification_details:
+                mobile_provided: true
+                mobile_risk_score: 0.32
+                id_provided: true
+                id_risk_score: 0.18
+                name_match: 0.82
+                flags:
+                  - Name on gov't issued ID is below match threshold
+                  - Phone number is not associated with this individual
+          value:
+            id: qyiyyPTZB9g
+            client_metadata:
+              internal_id: '309182313'
+              group_id: ds839jdad
+            wire_instructions:
+              bank_name: JP MORGAN CHASE
+              bank_id_code: '021000021'
+              id_code_type: ABA
+              name_on_account: Smith Family Trust LLC
+              beneficiary_address: '3624 Dauphine St, New Orleans, LA 70117'
+              account_number: '103983019283'
+              ffc: FBO acct 3020449390-B
+              intermediary_bank_name: BANQUE DE SAVOIE S.A.
+              intermediary_bank_id_code: BSAVFR2C
+              intermediary_bank_id_code_type: SWIFT
+              intermediary_bank_account_number: '1120897764'
+              provided_by:
+                name: Ali Someperson
+                legal_name: ALLISON KATHRYN SOMEPERSON
+                email_address: alice@familyoffice.com
+                phone_number: '+12125551212'
+                status: PASSED
+                at: '2021-07-28 18:15 EST'
+                from: 'New York, NY USA'
+                verification_details:
+                  mobile_provided: true
+                  mobile_risk_score: 0.12
+                  id_provided: true
+                  id_risk_score: 0.08
+                  name_match: 0.92
+                  flags: []
+              confirmed_by:
+                name: John Smith
+                legal_name: JONATHAN WINGATE SMITH
+                email_address: john.smith@gmail.com
+                phone_number: '+12125551213'
+                status: PASSED
+                at: '2021-07-29 15:12 EST'
+                from: 'Metarie, LA USA'
+                verification_details:
+                  mobile_provided: true
+                  mobile_risk_score: 0.32
+                  id_provided: true
+                  id_risk_score: 0.18
+                  name_match: 0.82
+                  flags:
+                    - Name on gov't issued ID is below match threshold
+                    - Phone number is not associated with this individual
 security:
   - api_key: []
 tags:
