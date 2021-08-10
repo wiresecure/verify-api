@@ -1,0 +1,57 @@
+{
+  "id": "qyiyyPTZB9g",
+  "client_metadata": {
+    "internal_id": "309182313",
+    "group_id": "ds839jdad"
+  },
+  "wire_instructions": {
+    "bank_name": "JP MORGAN CHASE",
+    "bank_id_code": "021000021",
+    "id_code_type": "ABA",
+    "name_on_account": "Smith Family Trust LLC",
+    "beneficiary_address": "3624 Dauphine St, New Orleans, LA 70117",
+    "account_number": "103983019283",
+    "ffc": "FBO acct 3020449390-B",
+    "intermediary_bank_name": "BANQUE DE SAVOIE S.A.",
+    "intermediary_bank_id_code": "BSAVFR2C",
+    "intermediary_bank_id_code_type": "SWIFT",
+    "intermediary_bank_account_number": "1120897764",
+    "provided_by": {
+      "name": "Ali Someperson",
+      "legal_name": "ALLISON KATHRYN SOMEPERSON",
+      "email_address": "alice@familyoffice.com",
+      "phone_number": "+12125551212",
+      "status": "PASSED",
+      "at": "2021-07-28 18:15 EST",
+      "from": "New York, NY USA",
+      "verification_details": {
+        "mobile_provided": true,
+        "mobile_risk_score": 0.12,
+        "id_provided": true,
+        "id_risk_score": 0.08,
+        "name_match": 0.92,
+        "flags": []
+      }
+    },
+    "confirmed_by": {
+      "name": "John Smith",
+      "legal_name": "JONATHAN WINGATE SMITH",
+      "email_address": "john.smith@gmail.com",
+      "phone_number": "+12125551213",
+      "status": "PASSED",
+      "at": "2021-07-29 15:12 EST",
+      "from": "Metarie, LA USA",
+      "verification_details": {
+        "mobile_provided": true,
+        "mobile_risk_score": 0.32,
+        "id_provided": true,
+        "id_risk_score": 0.18,
+        "name_match": 0.82,
+        "flags": [
+          "Name on gov't issued ID is below match threshold",
+          "Phone number is not associated with this individual"
+        ]
+      }
+    }
+  }
+}
