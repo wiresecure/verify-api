@@ -1,6 +1,6 @@
 openapi: 3.0.2
 info:
-  version: 1.0.0
+  version: 1.0.0-beta
   title: Verify
   contact:
     email: eng@wirescure.com
@@ -12,6 +12,8 @@ info:
     The WireSecure verification API allows you to request confirmation of wire instructions from parties who must prove their identity.
 
     A demo is available showing how this functionality may be embedded within the [collection of subscriber documents](https://verify-demo.wiresecure.com/demo/button_collect) during the onboarding of a new fund.
+
+    NOTE: This documentation is still under active discussion and development and things are likely to change before production release.
 externalDocs:
   description: Find out how to create a GitHub repo for your OpenAPI definition.
   url: 'https://github.com/Rebilly/generator-openapi-repo'
