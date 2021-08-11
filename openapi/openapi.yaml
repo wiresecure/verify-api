@@ -318,20 +318,15 @@ components:
           description: 'The account number '
         ffc:
           type: string
-          minLength: 1
           description: For Further Credit information
         intermediary_bank_name:
           type: string
-          minLength: 1
         intermediary_bank_id_code:
           type: string
-          minLength: 1
         intermediary_bank_id_code_type:
           type: string
-          minLength: 1
         intermediary_bank_account_number:
           type: string
-          minLength: 1
       required:
         - bank_id_code
         - bank_name
@@ -365,12 +360,10 @@ components:
           example: John Smith
         legal_name:
           type: string
-          minLength: 1
           description: The name as it appears on this person's government issued ID
           example: JONATHAN WINGATE SMITH
         email_address:
           type: string
-          minLength: 1
           description: The email address that was provided to us for this individual
         phone_number:
           type: string
@@ -395,8 +388,6 @@ components:
           required:
             - mobile_provided
             - id_provided
-            - id_risk_score
-            - name_match
           properties:
             mobile_provided:
               type: boolean
@@ -408,8 +399,12 @@ components:
               description: 'If a mobile number was provided for verification, this is the risk assessment of that number (lower is better).'
             id_provided:
               type: boolean
+              description: Indicates whether or not an ID was evaluated during the course of this verification
             id_risk_score:
               type: number
+              minimum: 0
+              maximum: 1
+              description: 'If a government issued ID was provided for verification, this is the risk assessment of that evaluation (lower is better).'
             name_match:
               type: number
               description: A measure of how closely the name provided matched the name on the individuals government issued ID
