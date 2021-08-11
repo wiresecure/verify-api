@@ -8,8 +8,10 @@ info:
   license: {}
   x-logo:
     url: 'https://raw.githubusercontent.com/wiresecure/verify-api/main/openapi/web/logo.png'
-  description: |
-    The WireSecure verification API allows you to create requests for verified wire instructions and retrieve the results of those requests.
+  description: |-
+    The WireSecure verification API allows you to request confirmation of wire instructions from parties who must prove their identity.
+
+    A demo is available showing how this functionality may be embedded within the [collection of subscriber documents](https://verify-stg.wiresecure.com/demo/button_collect) during the onboarding of a new fund.
 externalDocs:
   description: Find out how to create a GitHub repo for your OpenAPI definition.
   url: 'https://github.com/Rebilly/generator-openapi-repo'
