@@ -1,0 +1,46 @@
+{
+  "id": "mock-001",
+  "createdAt": "JS timestamp",
+  "updatedAt": "JS timestamp",
+  "name": "Smith Family Trust",
+  "externalMetadata": {
+    "id": "client-id-123",
+    "group_id": "client-group-id-123",
+    "something_else": "hi there"
+  },
+  "representatives": [
+    {
+      "name": "Victor Adminski",
+      "email": "vadminski@familyoffices.com",
+      "phone": "+12125551234"
+    }
+  ],
+  "notificationContacts": [
+    {
+      "name": "Tom Smith",
+      "email": "tom.smith@email.com"
+    }
+  ],
+  "verifiableItems": [
+    {
+      "type": "wireinstructions",
+      "status": "confirmed|provided|pending",
+      "data": {
+        "nameOnAccount": "SMITH FAMILY TRUST LLC",
+        "bankName": "J P MORGAN CHASE",
+        "bankABA": "021000021",
+        "etc": "etc"
+      },
+      "providedBy": {
+        "name": "ClientCorp API"
+      },
+      "confirmedBy": {
+        "name": "VICTOR M ADMINSKI",
+        "status": "verified",
+        "verificationDetail": {
+          "etc": "etc"
+        }
+      }
+    }
+  ]
+}

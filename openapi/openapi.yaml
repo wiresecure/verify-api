@@ -105,6 +105,7 @@ paths:
                     intermediary_bank_id_code_type: SWIFT
                     intermediary_bank_account_number: '1120897764'
         description: ''
+      deprecated: true
     get:
       summary: Retrieve verification results
       operationId: get-verify
@@ -174,6 +175,107 @@ paths:
           name: id
           description: The verification request ID that was received after calling the POST method
           required: true
+      deprecated: true
+  /members:
+    put:
+      summary: Member Create
+      operationId: put-members
+      responses:
+        '200':
+          description: OK
+      security:
+        - api_key: []
+      description: Create a new member and get a link to use for ID verification of the individual providing or confirming the requested items.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              type: object
+              x-examples:
+                example-1:
+                  name: Smith Family Trust
+                  externalMetadata:
+                    id: client-id-123
+                    group_id: client-group-id-123
+                    something_else: hi there
+                  representatives:
+                    - name: Victor Adminski
+                      email: vadminski@familyoffices.test
+                      phone: '+12125551234'
+                  verifiableItems:
+                    - type: wireinstructions
+                      data:
+                        nameOnAccount: SMITH FAMILY TRUST LLC
+                        bankIdCode: '021000021'
+                        bankAccountNumber: '1234567890'
+              properties:
+                name:
+                  type: string
+                  description: The name of this entity that is represented by the provided representative(s).
+                  example: Smith Family Trust LLC
+                externalMetadata:
+                  type: object
+                  description: Additional data passed back to the client with this member
+                representatives:
+                  type: array
+                  uniqueItems: true
+                  minItems: 1
+                  description: The parties that will be representing this member and providing the requested information. They will be asked to go through ID Verification.
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        minLength: 1
+                      email:
+                        type: string
+                        minLength: 1
+                      phone:
+                        type: string
+                        example: '+12125551234'
+                        pattern: '^\+[1-9]\d{1,14}$'
+                        description: e.164 formatted phone number
+                    required:
+                      - name
+                      - email
+                verifiableItems:
+                  type: array
+                  uniqueItems: true
+                  minItems: 1
+                  items:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        minLength: 1
+                      data:
+                        type: object
+                    required:
+                      - type
+              required:
+                - name
+                - representatives
+                - verifiableItems
+            examples:
+              example-1:
+                value:
+                  name: Smith Family Trust
+                  externalMetadata:
+                    id: client-id-123
+                    group_id: client-group-id-123
+                    something_else: hi there
+                  representatives:
+                    - name: Victor Adminski
+                      email: vadminski@familyoffices.test
+                      phone: '+12125551234'
+                  verifiableItems:
+                    - type: wireinstructions
+                      data:
+                        nameOnAccount: SMITH FAMILY TRUST LLC
+                        bankIdCode: '021000021'
+                        bankAccountNumber: '1234567890'
+        description: ''
 components:
   securitySchemes:
     api_key:
