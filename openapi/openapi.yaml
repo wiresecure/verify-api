@@ -22,7 +22,7 @@ servers:
   - url: 'https://verify-api-stg.wiresecure.com/v1'
     description: STAGING
 paths:
-  /members:
+  '/members/{id}':
     put:
       summary: Member Create
       operationId: create-member
@@ -171,7 +171,13 @@ paths:
                         bankCode: '021000021'
                         accountNumber: '1234567890'
         description: ''
-    parameters: []
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+        description: The ID of the member you wish to retrieve
     get:
       summary: Get Member
       operationId: get-member
@@ -185,11 +191,11 @@ paths:
       description: Not implemented just yet...
       parameters:
         - schema:
-            type: string
+            type: boolean
+            default: 'false'
           in: query
-          name: id
-          description: The ID of the member you wish to retrieve
-          required: true
+          name: includeItems
+          description: Should the response include the Verified Items?
   /verify:
     parameters: []
     post:
