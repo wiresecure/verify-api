@@ -259,13 +259,13 @@ paths:
                 - representatives
                 - verifiableItems
             examples:
-              example-1:
+              Sample with Wire Instructions:
                 value:
                   name: Smith Family Trust
                   externalMetadata:
                     id: client-id-123
                     group_id: client-group-id-123
-                    something_else: hi there
+                    something_else: other thing
                   representatives:
                     - name: Victor Adminski
                       email: vadminski@familyoffices.test
@@ -274,8 +274,8 @@ paths:
                     - type: wireinstructions
                       data:
                         nameOnAccount: SMITH FAMILY TRUST LLC
-                        bankIdCode: '021000021'
-                        bankAccountNumber: '1234567890'
+                        bankCode: '021000021'
+                        accountNumber: '1234567890'
         description: ''
 components:
   securitySchemes:
