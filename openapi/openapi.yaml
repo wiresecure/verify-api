@@ -76,7 +76,7 @@ paths:
                   value:
                     error: invalid API key
       security:
-        - api_key: []
+        - API Key: []
       description: Create a new member and get a link to use for ID verification of the individual providing or confirming the requested items.
       requestBody:
         content:
@@ -172,6 +172,24 @@ paths:
                         accountNumber: '1234567890'
         description: ''
     parameters: []
+    get:
+      summary: Get Member
+      operationId: get-member
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+      security:
+        - Secret Key: []
+      description: Not implemented just yet...
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: id
+          description: The ID of the member you wish to retrieve
+          required: true
   /verify:
     parameters: []
     post:
@@ -327,11 +345,16 @@ paths:
       deprecated: true
 components:
   securitySchemes:
-    api_key:
+    API Key:
       type: apiKey
       in: header
       name: x-api-key
-      description: The api key provided to you by WireSecure
+      description: The api key provided to you by WireSecure. This is required on all requests and is safe to use from browser based calls.
+    Secret Key:
+      name: x-secret-key
+      type: apiKey
+      in: header
+      description: 'The secret key is not intended for use in browser side code, this (combined with the API key) is intended to be used by back end processes to retrieve data.'
   schemas:
     Confirmation:
       description: The results of a verification request.
