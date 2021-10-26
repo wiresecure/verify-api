@@ -7,7 +7,7 @@
   "private": true,
   "scripts": {
     "start": "openapi preview-docs",
-    "build": "redoc-cli bundle openapi/openapi.yaml && mv redoc-static.html index.html",
+    "build": "redoc-cli bundle openapi/openapi.yaml --options.theme.colors.primary.main=orange && mv redoc-static.html index.html",
     "test": "openapi lint"
   }
 }
