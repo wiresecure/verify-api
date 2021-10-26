@@ -16,11 +16,163 @@ externalDocs:
   description: Find out how to create a GitHub repo for your OpenAPI definition.
   url: 'https://github.com/Rebilly/generator-openapi-repo'
 servers:
-  - url: 'https://verify-api.wiresecure.com'
+  - url: 'https://verify-api.wiresecure.com/v1'
     description: PRODUCTION
-  - url: 'https://verify-api-demo.wiresecure.com'
+  - url: 'https://verify-api-demo.wiresecure.com/v1'
     description: DEMO
+  - url: 'https://verify-api-stg.wiresecure.com/v1'
+    description: STAGING
 paths:
+  /members:
+    put:
+      summary: Member Create
+      operationId: create-member
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  id:
+                    type: string
+                    minLength: 1
+                  verifyLink:
+                    type: string
+                    minLength: 1
+                required:
+                  - id
+                  - verifyLink
+                x-examples:
+                  example-1:
+                    id: HEx5hYEZ
+                    verifyLink: 'http://localhost:3000/verify/m/HEx5hYEZ'
+              examples:
+                Member Created:
+                  value:
+                    id: HEx5hYEZ
+                    verifyLink: 'https://verify.wiresecure.com/verify/m/HEx5hYEZ'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  error:
+                    type: string
+                    minLength: 1
+                required:
+                  - error
+                x-examples:
+                  example-1:
+                    error: x-api-key is required
+              examples:
+                Bad API key:
+                  value:
+                    error: invalid API key
+      security:
+        - api_key: []
+      description: Create a new member and get a link to use for ID verification of the individual providing or confirming the requested items.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              type: object
+              x-examples:
+                example-1:
+                  name: Smith Family Trust
+                  externalMetadata:
+                    id: client-id-123
+                    group_id: client-group-id-123
+                    something_else: hi there
+                  representatives:
+                    - name: Victor Adminski
+                      email: vadminski@familyoffices.test
+                      phone: '+12125551234'
+                  verifiableItems:
+                    - type: wireinstructions
+                      data:
+                        nameOnAccount: SMITH FAMILY TRUST LLC
+                        bankIdCode: '021000021'
+                        bankAccountNumber: '1234567890'
+              properties:
+                name:
+                  type: string
+                  description: The name of this entity that is represented by the provided representative(s).
+                  example: Smith Family Trust LLC
+                externalMetadata:
+                  type: object
+                  description: Additional data passed back to the client with this member
+                representatives:
+                  type: array
+                  uniqueItems: true
+                  minItems: 1
+                  description: The parties that will be representing this member and providing the requested information. They will be asked to go through ID Verification.
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        minLength: 1
+                      email:
+                        type: string
+                        minLength: 1
+                      phone:
+                        type: string
+                        example: '+12125551234'
+                        pattern: '^\+[1-9]\d{1,14}$'
+                        description: e.164 formatted phone number
+                    required:
+                      - name
+                      - email
+                verifiableItems:
+                  type: array
+                  uniqueItems: true
+                  minItems: 1
+                  description: 'The items that are to be provided or confirmed. Currently, only `wireinstructions` is supported.'
+                  items:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        example: wireinstructions
+                        enum:
+                          - wireinstructions
+                      data:
+                        oneOf:
+                          - $ref: ./components/schemas/Instructions.yaml
+                        description: 'If provided, this data will be shown to the representative and they will be asked to confirm or update it. If this is empty, they will be asked to provide it.'
+              required:
+                - name
+                - representatives
+                - verifiableItems
+            examples:
+              Sample with Wire Instructions:
+                value:
+                  name: Smith Family Trust
+                  externalMetadata:
+                    id: client-id-123
+                    group_id: client-group-id-123
+                    something_else: other thing
+                  representatives:
+                    - name: Victor Adminski
+                      email: vadminski@familyoffices.test
+                      phone: '+12125551234'
+                  verifiableItems:
+                    - type: wireinstructions
+                      data:
+                        nameOnAccount: SMITH FAMILY TRUST LLC
+                        bankCode: '021000021'
+                        accountNumber: '1234567890'
+        description: ''
+    parameters: []
   /verify:
     parameters: []
     post:
@@ -174,109 +326,6 @@ paths:
           description: The verification request ID that was received after calling the POST method
           required: true
       deprecated: true
-  /members:
-    put:
-      summary: Member Create
-      operationId: put-members
-      responses:
-        '200':
-          description: OK
-      security:
-        - api_key: []
-      description: Create a new member and get a link to use for ID verification of the individual providing or confirming the requested items.
-      requestBody:
-        content:
-          application/json:
-            schema:
-              description: ''
-              type: object
-              x-examples:
-                example-1:
-                  name: Smith Family Trust
-                  externalMetadata:
-                    id: client-id-123
-                    group_id: client-group-id-123
-                    something_else: hi there
-                  representatives:
-                    - name: Victor Adminski
-                      email: vadminski@familyoffices.test
-                      phone: '+12125551234'
-                  verifiableItems:
-                    - type: wireinstructions
-                      data:
-                        nameOnAccount: SMITH FAMILY TRUST LLC
-                        bankIdCode: '021000021'
-                        bankAccountNumber: '1234567890'
-              properties:
-                name:
-                  type: string
-                  description: The name of this entity that is represented by the provided representative(s).
-                  example: Smith Family Trust LLC
-                externalMetadata:
-                  type: object
-                  description: Additional data passed back to the client with this member
-                representatives:
-                  type: array
-                  uniqueItems: true
-                  minItems: 1
-                  description: The parties that will be representing this member and providing the requested information. They will be asked to go through ID Verification.
-                  items:
-                    type: object
-                    properties:
-                      name:
-                        type: string
-                        minLength: 1
-                      email:
-                        type: string
-                        minLength: 1
-                      phone:
-                        type: string
-                        example: '+12125551234'
-                        pattern: '^\+[1-9]\d{1,14}$'
-                        description: e.164 formatted phone number
-                    required:
-                      - name
-                      - email
-                verifiableItems:
-                  type: array
-                  uniqueItems: true
-                  minItems: 1
-                  description: 'The items that are to be provided or confirmed. Currently, only `wireinstructions` is supported.'
-                  items:
-                    type: object
-                    properties:
-                      type:
-                        type: string
-                        example: wireinstructions
-                        enum:
-                          - wireinstructions
-                      data:
-                        oneOf:
-                          - $ref: ./components/schemas/Instructions.yaml
-                        description: 'If provided, this data will be shown to the representative and they will be asked to confirm or update it. If this is empty, they will be asked to provide it.'
-              required:
-                - name
-                - representatives
-                - verifiableItems
-            examples:
-              Sample with Wire Instructions:
-                value:
-                  name: Smith Family Trust
-                  externalMetadata:
-                    id: client-id-123
-                    group_id: client-group-id-123
-                    something_else: other thing
-                  representatives:
-                    - name: Victor Adminski
-                      email: vadminski@familyoffices.test
-                      phone: '+12125551234'
-                  verifiableItems:
-                    - type: wireinstructions
-                      data:
-                        nameOnAccount: SMITH FAMILY TRUST LLC
-                        bankCode: '021000021'
-                        accountNumber: '1234567890'
-        description: ''
 components:
   securitySchemes:
     api_key:
