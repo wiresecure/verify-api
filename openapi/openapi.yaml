@@ -5,7 +5,6 @@ info:
   contact:
     email: eng@wirescure.com
     name: WireSecure Engineering
-  license: {}
   x-logo:
     url: 'https://raw.githubusercontent.com/wiresecure/verify-api/main/openapi/web/logo.png'
   description: |-
@@ -620,4 +619,4 @@ components:
 security:
   - api_key: []
 tags:
-  - name: Verify
+  - name: Members
