@@ -1,7 +1,7 @@
 openapi: 3.0.2
 info:
   version: 1.0.0-beta
-  title: Verify
+  title: WireSecure
   contact:
     email: eng@wirescure.com
     name: WireSecure Engineering
@@ -9,9 +9,7 @@ info:
   x-logo:
     url: 'https://raw.githubusercontent.com/wiresecure/verify-api/main/openapi/web/logo.png'
   description: |-
-    The WireSecure verification API allows you to request confirmation of wire instructions from parties who must prove their identity.
-
-    A demo is available showing how this functionality may be embedded within the [collection of subscriber documents](https://verify-demo.wiresecure.com/demo/button_collect) during the onboarding of a new fund.
+    The WireSecure API allows you to request confirmation of data (such as wire instructions) from parties who must prove their identity.
 
     NOTE: This documentation is still under active discussion and development and things are likely to change before production release.
 externalDocs:
@@ -20,8 +18,8 @@ externalDocs:
 servers:
   - url: 'https://verify-api.wiresecure.com'
     description: PRODUCTION
-  - url: 'https://verify-api-sandbox.wiresecure.com'
-    description: SANDBOX
+  - url: 'https://verify-api-demo.wiresecure.com'
+    description: DEMO
 paths:
   /verify:
     parameters: []
@@ -243,16 +241,19 @@ paths:
                   type: array
                   uniqueItems: true
                   minItems: 1
+                  description: 'The items that are to be provided or confirmed. Currently, only `wireinstructions` is supported.'
                   items:
                     type: object
                     properties:
                       type:
                         type: string
-                        minLength: 1
+                        example: wireinstructions
+                        enum:
+                          - wireinstructions
                       data:
-                        type: object
-                    required:
-                      - type
+                        oneOf:
+                          - $ref: ./components/schemas/Instructions.yaml
+                        description: 'If provided, this data will be shown to the representative and they will be asked to confirm or update it. If this is empty, they will be asked to provide it.'
               required:
                 - name
                 - representatives
@@ -281,7 +282,7 @@ components:
     api_key:
       type: apiKey
       in: header
-      name: api_key
+      name: x-api-key
       description: The api key provided to you by WireSecure
   schemas:
     Confirmation:
