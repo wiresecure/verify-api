@@ -22,7 +22,7 @@ servers:
   - url: 'https://verify-api-stg.wiresecure.com/v1'
     description: STAGING
 paths:
-  '/members/{id}':
+  /members:
     put:
       summary: Member Create
       operationId: create-member
@@ -55,6 +55,25 @@ paths:
                     verifyLink: 'https://verify.wiresecure.com/verify/m/HEx5hYEZ'
         '400':
           description: Bad Request
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                x-examples:
+                  example-1:
+                    errors:
+                      - 'field putRequest.Name [value=] failed ''required'' validation'
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+              examples:
+                example-1:
+                  value:
+                    errors:
+                      - 'field putRequest.Name [value=] failed ''required'' validation'
         '401':
           description: Unauthorized
           content:
@@ -148,6 +167,8 @@ paths:
                         oneOf:
                           - $ref: ./components/schemas/Instructions.yaml
                         description: 'If provided, this data will be shown to the representative and they will be asked to confirm or update it. If this is empty, they will be asked to provide it.'
+                options:
+                  $ref: '#/components/schemas/MemberOptions'
               required:
                 - name
                 - representatives
@@ -170,14 +191,12 @@ paths:
                         nameOnAccount: SMITH FAMILY TRUST LLC
                         bankCode: '021000021'
                         accountNumber: '1234567890'
+                        beneficiaryAddress: '78 Ferguson Ave., Burlington VT 05401'
+                  options:
+                    verifyConfirm: true
+                    updatesWebhook: 'https://webhooks.test'
         description: ''
-    parameters:
-      - schema:
-          type: string
-        name: id
-        in: path
-        required: true
-        description: The ID of the member you wish to retrieve
+    parameters: []
     get:
       summary: Get Member
       operationId: get-member
@@ -644,6 +663,21 @@ components:
         - at
         - from
         - verification_details
+    MemberOptions:
+      description: Parameters to customize the handling of member verifications.
+      type: object
+      x-examples:
+        example-1:
+          verifyConfirm: true
+          updatesWebhook: 'https://webhooks.test/member_updates'
+      properties:
+        verifyConfirm:
+          type: boolean
+          default: false
+        updatesWebhook:
+          type: string
+          minLength: 1
+          example: 'https://webhooks.test/member_updates'
   examples: {}
 security:
   - api_key: []
