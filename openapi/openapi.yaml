@@ -220,3 +220,4 @@ security:
   - api_key: []
 tags:
   - name: Verification Requests
+    description: Create and retrieve verification requests
