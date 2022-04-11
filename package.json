@@ -1,0 +1,13 @@
+{
+  "name": "verify",
+  "version": "1.0.0",
+  "dependencies": {
+    "@redocly/openapi-cli": "^1.0.0-beta.59"
+  },
+  "private": true,
+  "scripts": {
+    "start": "openapi preview-docs",
+    "build": "redoc-cli build openapi/openapi.yaml --options.theme.colors.primary.main=orange && mv redoc-static.html index.html",
+    "test": "openapi lint"
+  }
+}
