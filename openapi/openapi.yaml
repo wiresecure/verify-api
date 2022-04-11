@@ -155,7 +155,7 @@ components:
           minLength: 1
           example: 'https://webhooks.test/member_updates'
     CreateVerificationRequest:
-      description: ''
+      description: 'Defines the items to confirmed by the specified representative. If you don''t have bank instructions and want them to be provided, leave the `data` field of the `item` object null. If you already have the instructions and just want them to be confirmed they can be provided here in the `data` field of the `item`.'
       type: object
       x-examples:
         Request Bank Instructions:
@@ -165,6 +165,8 @@ components:
             phoneNumber: '+12125551234'
           items:
             - type: instructions
+          metadata:
+            internal_id: mock-123
       properties:
         rep:
           type: object
@@ -202,8 +204,14 @@ components:
                   - instructions
                   - email
                 example: instructions
+              data:
+                type: string
             required:
               - type
+        metadata:
+          type: object
+        webhookUrl:
+          type: string
       required:
         - rep
         - items
