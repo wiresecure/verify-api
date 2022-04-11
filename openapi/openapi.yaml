@@ -219,4 +219,4 @@ components:
 security:
   - api_key: []
 tags:
-  - name: Members
+  - name: Verification Requests
