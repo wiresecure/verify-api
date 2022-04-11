@@ -25,8 +25,33 @@ paths:
       summary: Create Verification Request
       operationId: put-verify_request
       responses:
-        '200':
-          description: OK
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                x-examples:
+                  example-1:
+                    verify_link: 'http://localhost:3000/verify/7nuyshQQUZs9PQur'
+                    verify_request_id: 7nuyshQQUZs9PQur
+                properties:
+                  verify_link:
+                    type: string
+                    minLength: 1
+                    description: The link to be used for verification and confirmation of items
+                    example: 'https://carnival-demo.wiresecure.com/verify/7nuyshQQUZs9PQur'
+                  verify_request_id:
+                    type: string
+                    minLength: 1
+                    description: The ID of the created verification request
+                    example: 7nuyshQQUZs9PQur
+                required:
+                  - verify_link
+                  - verify_request_id
+        '401':
+          description: unknown API key
       description: Creates a Verification Request. This endpoint allows you to define what items you would like the representative to confirm after ID verification has been performed.
       security:
         - API Key: []
@@ -220,9 +245,22 @@ components:
         - rep
         - items
     BankInstructionsItemRequest:
-      title: Bank Instructions Item Request
+      title: Bank Instructions
       type: object
       description: Bank Instructions to be confirmed.
+      x-examples:
+        Full instructions with Intermediary bank:
+          bankId: ax45HgfK3
+          accountNumber: '0192830983123'
+          nameOnAccount: BOB L OTHERPERSON
+          beneficiaryAddress: '78 FERGUSON AVE., BURLINGTON VT 05401'
+          ffc: TX-343452 ACCT 4083424093284234
+          intermediaryBankId: bh6jJ43k
+          intermediaryBankAccount: '03980219830'
+        Minimal instructions:
+          bankId: ax45HgfK3
+          accountNumber: '132891273'
+          nameOnAccount: BOB L OTHERPERSON
       properties:
         bankId:
           type: string
@@ -230,24 +268,34 @@ components:
           example: ax45HgfK3
         accountNumber:
           type: string
+          description: The account number at the specified bank
+          example: '0123456789'
         nameOnAccount:
           type: string
+          description: The name exactly as it appears on the account
+          example: ROBERT LAWRENCE OTHERPERSON
         beneficiaryAddress:
           type: string
+          example: '3624 Dauphine St, New Orleans, LA 70117'
+          description: 'Currently optional although this might change. The address of the person receiving funds, NOT the address of the bank.'
         ffc:
           type: string
+          description: Optional For Further Credit information
+          example: 'TRUST ACCT #3450983908'
         intermediaryBankId:
           type: string
           description: Bank ID retrieved from the bank details API
           example: ax45HgfK3
         intermediaryBankAccount:
           type: string
+          description: The account number at the specifed bank
+          example: '0123456789'
       required:
         - bankId
         - accountNumber
         - nameOnAccount
     EmailItemRequest:
-      title: EmailItemRequest
+      title: Email Authorship
       type: object
       properties:
         senderEmailAddress:
@@ -259,9 +307,10 @@ components:
       required:
         - subject
       x-examples:
-        example-1:
-          senderEmailAddress: string
-          subject: string
+        Email confirmation:
+          senderEmailAddress: bob.otherperson@acme.test
+          subject: 'Running late, please pay this invoice for me'
+      description: Verify that the person who sent an email with this subject is who they are supposed to be.
   examples: {}
 security:
   - api_key: []
