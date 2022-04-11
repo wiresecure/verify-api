@@ -205,16 +205,63 @@ components:
                   - email
                 example: instructions
               data:
-                type: string
+                anyOf:
+                  - $ref: '#/components/schemas/BankInstructionsItemRequest'
+                  - $ref: '#/components/schemas/EmailItemRequest'
             required:
               - type
         metadata:
           type: object
+          description: Any arbitrary JSON object to be returned with this verification request
         webhookUrl:
           type: string
+          description: 'If a webhook URL is provided, it will be POSTed to when this verification request is updated.'
       required:
         - rep
         - items
+    BankInstructionsItemRequest:
+      title: Bank Instructions Item Request
+      type: object
+      description: Bank Instructions to be confirmed.
+      properties:
+        bankId:
+          type: string
+          description: Bank ID retrieved from the bank details API
+          example: ax45HgfK3
+        accountNumber:
+          type: string
+        nameOnAccount:
+          type: string
+        beneficiaryAddress:
+          type: string
+        ffc:
+          type: string
+        intermediaryBankId:
+          type: string
+          description: Bank ID retrieved from the bank details API
+          example: ax45HgfK3
+        intermediaryBankAccount:
+          type: string
+      required:
+        - bankId
+        - accountNumber
+        - nameOnAccount
+    EmailItemRequest:
+      title: EmailItemRequest
+      type: object
+      properties:
+        senderEmailAddress:
+          type: string
+          description: 'If left blank, the system will populate this with the email address of the rep'
+        subject:
+          type: string
+          description: The subject line of the email that is to be confirmed
+      required:
+        - subject
+      x-examples:
+        example-1:
+          senderEmailAddress: string
+          subject: string
   examples: {}
 security:
   - api_key: []
