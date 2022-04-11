@@ -6,18 +6,18 @@ info:
     email: eng@wirescure.com
     name: WireSecure Engineering
   x-logo:
-    url: 'https://raw.githubusercontent.com/wiresecure/verify-api/main/openapi/web/logo.png'
+    url: "https://raw.githubusercontent.com/wiresecure/verify-api/main/openapi/web/logo.png"
   description: The WireSecure API allows you to create verification links that validate the identity of the person providing information (like Bank Instructions).
-  termsOfService: 'https://www.wiresecure.com/terms-and-conditions/'
+  termsOfService: "https://www.wiresecure.com/terms-and-conditions/"
 externalDocs:
   description: Find out how to create a GitHub repo for your OpenAPI definition.
-  url: 'https://github.com/Rebilly/generator-openapi-repo'
+  url: "https://github.com/Rebilly/generator-openapi-repo"
 servers:
-  - url: 'https://carnival.wiresecure.com/api/v1'
+  - url: "https://carnival.wiresecure.com/api/v1"
     description: PRODUCTION
-  - url: 'https://carnival-demo.wiresecure.com/api/v1'
+  - url: "https://carnival-demo.wiresecure.com/api/v1"
     description: DEMO
-  - url: 'https://carnival-sandbox.wiresecure.com/api/v1'
+  - url: "https://carnival-sandbox.wiresecure.com/api/v1"
     description: SANDBOX
 paths:
   /verify_request:
@@ -25,7 +25,7 @@ paths:
       summary: Create Verification Request
       operationId: put-verify_request
       responses:
-        '200':
+        "200":
           description: OK
       description: Creates a Verification Request. This endpoint allows you to define what items you would like the representative to confirm after ID verification has been performed.
       security:
@@ -34,7 +34,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateVerificationRequest'
+              $ref: "#/components/schemas/CreateVerificationRequest"
 components:
   securitySchemes:
     API Key:
@@ -46,20 +46,20 @@ components:
       name: x-secret-key
       type: apiKey
       in: header
-      description: 'The secret key is not intended for use in browser side code, this (combined with the API key) is intended to be used by back end processes to retrieve data.'
+      description: "The secret key is not intended for use in browser side code, this (combined with the API key) is intended to be used by back end processes to retrieve data."
   schemas:
     Verification:
-      description: ''
+      description: ""
       type: object
       x-examples:
         example-1:
           name: Ali Someperson
           legal_name: ALLISON KATHRYN SOMEPERSON
           email_address: alice@familyoffice.com
-          phone_number: '+12125551212'
+          phone_number: "+12125551212"
           status: PASSED
-          at: '2021-07-28 18:15 EST'
-          from: 'New York, NY USA'
+          at: "2021-07-28 18:15 EST"
+          from: "New York, NY USA"
           verification_details:
             mobile_provided: true
             mobile_risk_score: 0.12
@@ -81,8 +81,8 @@ components:
           description: The email address that was provided to us for this individual
         phone_number:
           type: string
-          description: 'The E164 compliant phone number for this individual, provided by the individual during verification'
-          example: '+12125551234'
+          description: "The E164 compliant phone number for this individual, provided by the individual during verification"
+          example: "+12125551234"
         status:
           type: string
           enum:
@@ -96,7 +96,7 @@ components:
         from:
           type: string
           description: Coarse location information for where this verification occured
-          example: 'Red Bank, NJ USA'
+          example: "Red Bank, NJ USA"
         verification_details:
           type: object
           required:
@@ -110,7 +110,7 @@ components:
               type: number
               minimum: 0
               maximum: 1
-              description: 'If a mobile number was provided for verification, this is the risk assessment of that number (lower is better).'
+              description: "If a mobile number was provided for verification, this is the risk assessment of that number (lower is better)."
             id_provided:
               type: boolean
               description: Indicates whether or not an ID was evaluated during the course of this verification
@@ -118,7 +118,7 @@ components:
               type: number
               minimum: 0
               maximum: 1
-              description: 'If a government issued ID was provided for verification, this is the risk assessment of that evaluation (lower is better).'
+              description: "If a government issued ID was provided for verification, this is the risk assessment of that evaluation (lower is better)."
             name_match:
               type: number
               description: A measure of how closely the name provided matched the name on the individuals government issued ID
@@ -145,7 +145,7 @@ components:
       x-examples:
         example-1:
           verifyConfirm: true
-          updatesWebhook: 'https://webhooks.test/member_updates'
+          updatesWebhook: "https://webhooks.test/member_updates"
       properties:
         verifyConfirm:
           type: boolean
@@ -153,9 +153,9 @@ components:
         updatesWebhook:
           type: string
           minLength: 1
-          example: 'https://webhooks.test/member_updates'
+          example: "https://webhooks.test/member_updates"
     CreateVerificationRequest:
-      description: ''
+      description: ""
       type: object
       x-examples:
         example-1:
@@ -163,7 +163,7 @@ components:
           rep:
             name: Henry Ford
             emailAddress: brian.starke@gmail.com
-            phoneNumber: '+19174145090'
+            phoneNumber: "+19174145090"
           items:
             - type: instructions
       properties:
@@ -182,12 +182,12 @@ components:
                 Issued ID.
             emailAddress:
               type: string
-              description: 'The email address of the representative, will be evaluated to ensure it''s associated with the individual who has provided a Gov''t Issued ID.'
+              description: "The email address of the representative, will be evaluated to ensure it's associated with the individual who has provided a Gov't Issued ID."
             phoneNumber:
               type: string
               format: E.164
-              example: '+12125551234'
-              description: 'Provide a mobile number for the rep if you have one. Must be in E.164 format (https://en.wikipedia.org/wiki/E.164)'
+              example: "+12125551234"
+              description: "Provide a mobile number for the rep if you have one. Must be in E.164 format (https://en.wikipedia.org/wiki/E.164)"
         items:
           type: array
           uniqueItems: true
@@ -207,4 +207,4 @@ components:
 security:
   - api_key: []
 tags:
-  - name: Members
+  - name: Verification Requests

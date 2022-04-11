@@ -11,8 +11,6 @@ referenceDocs:
   theme:
     colors:
       primary:
-        main: "#fbbe2f"
+        main: "#3e7cec"
       secondary:
         main: "#fbbe2f"
-    typography:
-      fontFamily: "Nimbus Sans"
