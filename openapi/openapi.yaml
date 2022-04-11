@@ -1,6 +1,6 @@
 openapi: 3.0.2
 info:
-  version: 1.0.0-beta
+  version: v1.0.0
   title: WireSecure
   contact:
     email: eng@wirescure.com
@@ -60,6 +60,139 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateVerificationRequest'
+    get:
+      summary: ''
+      operationId: get-verify_request
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                description: ''
+                minItems: 1
+                uniqueItems: true
+                items:
+                  type: object
+                  required:
+                    - id
+                    - origin
+                    - createdAt
+                    - updatedAt
+                    - name
+                    - email
+                    - phone
+                    - status
+                    - items
+                    - numFlags
+                    - verifiedBy
+                  properties:
+                    id:
+                      type: string
+                      minLength: 1
+                    origin:
+                      type: string
+                      minLength: 1
+                    createdAt:
+                      type: string
+                      minLength: 1
+                    updatedAt:
+                      type: string
+                      minLength: 1
+                    name:
+                      type: string
+                      minLength: 1
+                    email:
+                      type: string
+                      minLength: 1
+                    phone:
+                      type: string
+                      minLength: 1
+                    status:
+                      type: string
+                      minLength: 1
+                    items:
+                      type: array
+                      uniqueItems: true
+                      minItems: 1
+                      items:
+                        required:
+                          - id
+                          - type
+                          - status
+                        properties:
+                          id:
+                            type: string
+                            minLength: 1
+                          type:
+                            type: string
+                            minLength: 1
+                          status:
+                            type: string
+                            minLength: 1
+                    numFlags:
+                      type: number
+                    verifiedBy:
+                      type: string
+                      minLength: 1
+                x-examples:
+                  example-1:
+                    - id: 7nuyshQQUZs9PQur
+                      origin: outlook
+                      createdAt: '2022-04-11T15:08:35.685081-04:00'
+                      updatedAt: '2022-04-11T15:08:35.685081-04:00'
+                      name: Brian Starke
+                      email: brian.starke@gmail.com
+                      phone: '+19174145090'
+                      status: pending
+                      items:
+                        - id: DJDR9z8N
+                          type: instructions
+                          status: pending
+                    - id: xwp9GP4KrhFRA56j
+                      origin: console
+                      createdAt: '2022-04-06T11:49:09.654549-04:00'
+                      updatedAt: '2022-04-06T11:49:35.632786-04:00'
+                      name: Tom Person
+                      email: tom.person@test.test
+                      phone: '+19174145092'
+                      status: verified
+                      items:
+                        - id: mpSJQ83f
+                          type: email
+                          status: confirmed
+                      numFlags: 1
+                      verifiedBy: TOM PERSON
+                    - id: z69aKxRq8Y8CgBQS
+                      origin: console
+                      createdAt: '2022-04-06T11:32:28.986797-04:00'
+                      updatedAt: '2022-04-06T11:41:00.716833-04:00'
+                      name: Brian Starke
+                      email: brian.starke+test@gmail.com
+                      phone: '+19174145090'
+                      status: verified
+                      items:
+                        - id: wzSSGXah
+                          type: email
+                          status: confirmed
+                      numFlags: 1
+                      verifiedBy: BRIAN STARKE
+                    - id: WY6eh7BQjuwBY26V
+                      origin: console
+                      createdAt: '2022-04-06T11:29:07.889972-04:00'
+                      updatedAt: '2022-04-06T11:30:21.781295-04:00'
+                      name: Brian Starke
+                      email: brian.starke@gmail.com
+                      phone: '+19174145090'
+                      status: verified
+                      items:
+                        - id: 3fb8BQu8
+                          type: instructions
+                          status: confirmed
+                      numFlags: 1
+                      verifiedBy: BRIAN STARKE
+      description: List all verification requests created by this API token.
 components:
   securitySchemes:
     API Key:
