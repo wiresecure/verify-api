@@ -7,367 +7,34 @@ info:
     name: WireSecure Engineering
   x-logo:
     url: 'https://raw.githubusercontent.com/wiresecure/verify-api/main/openapi/web/logo.png'
-  description: |-
-    The WireSecure API allows you to request confirmation of data (such as wire instructions) from parties who must prove their identity.
-
-    NOTE: This documentation is still under active discussion and development and things are likely to change before production release.
+  description: The WireSecure API allows you to create verification links that validate the identity of the person providing information (like Bank Instructions).
+  termsOfService: 'https://www.wiresecure.com/terms-and-conditions/'
 externalDocs:
   description: Find out how to create a GitHub repo for your OpenAPI definition.
   url: 'https://github.com/Rebilly/generator-openapi-repo'
 servers:
-  - url: 'https://verify-api.wiresecure.com/v1'
+  - url: 'https://carnival.wiresecure.com/api/v1'
     description: PRODUCTION
-  - url: 'https://verify-api-demo.wiresecure.com/v1'
+  - url: 'https://carnival-demo.wiresecure.com/api/v1'
     description: DEMO
-  - url: 'https://verify-api-stg.wiresecure.com/v1'
-    description: STAGING
+  - url: 'https://carnival-sandbox.wiresecure.com/api/v1'
+    description: SANDBOX
 paths:
-  /members:
+  /verify_request:
     put:
-      summary: Member Create
-      operationId: create-member
+      summary: Create Verification Request
+      operationId: put-verify_request
       responses:
         '200':
           description: OK
-          content:
-            application/json:
-              schema:
-                description: ''
-                type: object
-                properties:
-                  id:
-                    type: string
-                    minLength: 1
-                  verifyLink:
-                    type: string
-                    minLength: 1
-                required:
-                  - id
-                  - verifyLink
-                x-examples:
-                  example-1:
-                    id: HEx5hYEZ
-                    verifyLink: 'http://localhost:3000/verify/m/HEx5hYEZ'
-              examples:
-                Member Created:
-                  value:
-                    id: HEx5hYEZ
-                    verifyLink: 'https://verify.wiresecure.com/verify/m/HEx5hYEZ'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                description: ''
-                type: object
-                x-examples:
-                  example-1:
-                    errors:
-                      - 'field putRequest.Name [value=] failed ''required'' validation'
-                properties:
-                  errors:
-                    type: array
-                    items:
-                      type: string
-              examples:
-                example-1:
-                  value:
-                    errors:
-                      - 'field putRequest.Name [value=] failed ''required'' validation'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                description: ''
-                type: object
-                properties:
-                  error:
-                    type: string
-                    minLength: 1
-                required:
-                  - error
-                x-examples:
-                  example-1:
-                    error: x-api-key is required
-              examples:
-                Bad API key:
-                  value:
-                    error: invalid API key
+      description: Creates a Verification Request. This endpoint allows you to define what items you would like the representative to confirm after ID verification has been performed.
       security:
         - API Key: []
-      description: Create a new member and get a link to use for ID verification of the individual providing or confirming the requested items.
       requestBody:
         content:
           application/json:
             schema:
-              description: ''
-              type: object
-              x-examples:
-                example-1:
-                  name: Smith Family Trust
-                  externalMetadata:
-                    id: client-id-123
-                    group_id: client-group-id-123
-                    something_else: hi there
-                  representatives:
-                    - name: Victor Adminski
-                      email: vadminski@familyoffices.test
-                      phone: '+12125551234'
-                  verifiableItems:
-                    - type: wireinstructions
-                      data:
-                        nameOnAccount: SMITH FAMILY TRUST LLC
-                        bankIdCode: '021000021'
-                        bankAccountNumber: '1234567890'
-              properties:
-                name:
-                  type: string
-                  description: The name of this entity that is represented by the provided representative(s).
-                  example: Smith Family Trust LLC
-                externalMetadata:
-                  type: object
-                  description: Additional data passed back to the client with this member
-                representatives:
-                  type: array
-                  uniqueItems: true
-                  minItems: 1
-                  description: The parties that will be representing this member and providing the requested information. They will be asked to go through ID Verification.
-                  items:
-                    type: object
-                    properties:
-                      name:
-                        type: string
-                        minLength: 1
-                      email:
-                        type: string
-                        minLength: 1
-                      phone:
-                        type: string
-                        example: '+12125551234'
-                        pattern: '^\+[1-9]\d{1,14}$'
-                        description: e.164 formatted phone number
-                    required:
-                      - name
-                      - email
-                verifiableItems:
-                  type: array
-                  uniqueItems: true
-                  minItems: 1
-                  description: 'The items that are to be provided or confirmed. Currently, only `wireinstructions` is supported.'
-                  items:
-                    type: object
-                    properties:
-                      type:
-                        type: string
-                        example: wireinstructions
-                        enum:
-                          - wireinstructions
-                      data:
-                        oneOf:
-                          - $ref: ./components/schemas/Instructions.yaml
-                        description: 'If provided, this data will be shown to the representative and they will be asked to confirm or update it. If this is empty, they will be asked to provide it.'
-                options:
-                  $ref: '#/components/schemas/MemberOptions'
-              required:
-                - name
-                - representatives
-                - verifiableItems
-            examples:
-              Sample with Wire Instructions:
-                value:
-                  name: Smith Family Trust
-                  externalMetadata:
-                    id: client-id-123
-                    group_id: client-group-id-123
-                    something_else: other thing
-                  representatives:
-                    - name: Victor Adminski
-                      email: vadminski@familyoffices.test
-                      phone: '+12125551234'
-                  verifiableItems:
-                    - type: wireinstructions
-                      data:
-                        nameOnAccount: SMITH FAMILY TRUST LLC
-                        bankCode: '021000021'
-                        accountNumber: '1234567890'
-                        beneficiaryAddress: '78 Ferguson Ave., Burlington VT 05401'
-                  options:
-                    verifyConfirm: true
-                    updatesWebhook: 'https://webhooks.test'
-        description: ''
-    parameters: []
-    get:
-      summary: Get Member
-      operationId: get-member
-      responses:
-        '200':
-          description: OK
-        '401':
-          description: Unauthorized
-      security:
-        - Secret Key: []
-      description: Not implemented just yet...
-      parameters:
-        - schema:
-            type: boolean
-            default: 'false'
-          in: query
-          name: includeItems
-          description: Should the response include the Verified Items?
-  /verify:
-    parameters: []
-    post:
-      summary: Create a verification request
-      operationId: post-verify
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    description: This is the ID you'll use to pull the results of this verification request and the verified instructions.
-                  verificationLink:
-                    type: string
-                    description: The URL to use for verification.
-                required:
-                  - id
-                  - verificationLink
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: string
-              examples:
-                Error message example:
-                  value: 0210021 is not a valid ABA or SWIFT code
-        '401':
-          description: Unauthorized
-        '500':
-          description: Internal Server Error
-      description: |-
-        Create a request for verification/confirmation of identity and wire instructions. If wire instructions are already on file and provided through this endpoint, they will be shown to the individual and they will be asked to confirm that the instructions are valid.
-
-        This method returns a link that can be used for verification. The intent is that this can either be opened in a new tab (if this API is being called while embedded in a web application) or sent via SMS or email.
-
-        This method also returns an ID for this request which can be used by the `GET` method to fetch the results of this confirmation/verification.
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                email_address:
-                  type: string
-                phone_number:
-                  type: string
-                  description: The E164 compliant phone number for this individual
-                  example: '+12125551234'
-                metadata:
-                  type: object
-                  description: This metadata will be returned back when retrieving this verification is unused by WireSecure. It can be any valid JSON object.
-                wire_instructions:
-                  $ref: '#/components/schemas/WireInstructions'
-              required:
-                - name
-                - email_address
-            examples:
-              example with instructions to be confirmed:
-                value:
-                  name: John Smith
-                  email_address: john.smith@gmail.com
-                  phone_number: '+12125551234'
-                  metadata:
-                    internal_id: JSMITH001
-                  wire_instructions:
-                    bank_id_code: '021000021'
-                    name_on_account: SMITH FAMILY TRUST LLC
-                    beneficiary_address: '3624 Dauphine St, New Orleans, LA 70117'
-                    account_number: '103983019283'
-                    ffc: FBO acct 3020449390-B
-                    intermediary_bank_name: BANQUE DE SAVOIE S.A.
-                    intermediary_bank_id_code: BSAVFR2C
-                    intermediary_bank_id_code_type: SWIFT
-                    intermediary_bank_account_number: '1120897764'
-        description: ''
-      deprecated: true
-    get:
-      summary: Retrieve verification results
-      operationId: get-verify
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Confirmation'
-              examples:
-                example:
-                  value:
-                    id: qyiyyPTZB9g
-                    client_metadata:
-                      internal_id: '309182313'
-                      group_id: ds839jdad
-                    wire_instructions:
-                      bank_name: JP MORGAN CHASE
-                      bank_id_code: '021000021'
-                      id_code_type: ABA
-                      name_on_account: Smith Family Trust LLC
-                      beneficiary_address: '3624 Dauphine St, New Orleans, LA 70117'
-                      account_number: '103983019283'
-                      ffc: FBO acct 3020449390-B
-                      intermediary_bank_name: BANQUE DE SAVOIE S.A.
-                      intermediary_bank_id_code: BSAVFR2C
-                      intermediary_bank_id_code_type: SWIFT
-                      intermediary_bank_account_number: '1120897764'
-                      provided_by:
-                        name: Ali Someperson
-                        legal_name: ALLISON KATHRYN SOMEPERSON
-                        email_address: alice@familyoffice.com
-                        phone_number: '+12125551212'
-                        status: PASSED
-                        at: '2021-07-28 18:15 EST'
-                        from: 'New York, NY USA'
-                        verification_details:
-                          mobile_provided: true
-                          mobile_risk_score: 0.12
-                          id_provided: true
-                          id_risk_score: 0.08
-                          name_match: 0.92
-                          flags: []
-                      confirmed_by:
-                        name: John Smith
-                        legal_name: JONATHAN WINGATE SMITH
-                        email_address: john.smith@gmail.com
-                        phone_number: '+12125551213'
-                        status: PASSED
-                        at: '2021-07-29 15:12 EST'
-                        from: 'Metarie, LA USA'
-                        verification_details:
-                          mobile_provided: true
-                          mobile_risk_score: 0.32
-                          id_provided: true
-                          id_risk_score: 0.18
-                          name_match: 0.82
-                          flags:
-                            - Name on gov't issued ID is below match threshold
-                            - Phone number is not associated with this individual
-      description: Retrieve the instructions payload and details of the verification.
-      parameters:
-        - schema:
-            type: string
-          in: query
-          name: id
-          description: The verification request ID that was received after calling the POST method
-          required: true
-      deprecated: true
+              $ref: '#/components/schemas/CreateVerificationRequest'
 components:
   securitySchemes:
     API Key:
@@ -381,197 +48,6 @@ components:
       in: header
       description: 'The secret key is not intended for use in browser side code, this (combined with the API key) is intended to be used by back end processes to retrieve data.'
   schemas:
-    Confirmation:
-      description: The results of a verification request.
-      type: object
-      x-examples:
-        Example Confirmation Response:
-          id: qyiyyPTZB9g
-          client_metadata:
-            internal_id: '309182313'
-            group_id: ds839jdad
-          wire_instructions:
-            bank_name: JP MORGAN CHASE
-            bank_id_code: '021000021'
-            id_code_type: ABA
-            name_on_account: Smith Family Trust LLC
-            beneficiary_address: '3624 Dauphine St, New Orleans, LA 70117'
-            account_number: '103983019283'
-            ffc: FBO acct 3020449390-B
-            intermediary_bank_name: BANQUE DE SAVOIE S.A.
-            intermediary_bank_id_code: BSAVFR2C
-            intermediary_bank_id_code_type: SWIFT
-            intermediary_bank_account_number: '1120897764'
-          provided_by:
-            name: Ali Someperson
-            legal_name: ALLISON KATHRYN SOMEPERSON
-            email_address: alice@familyoffice.com
-            phone_number: '+12125551212'
-            status: PASSED
-            at: '2021-07-28 18:15 EST'
-            from: 'New York, NY USA'
-            verification_details:
-              mobile_provided: true
-              mobile_risk_score: 0.12
-              id_provided: true
-              id_risk_score: 0.08
-              name_match: 0.92
-              flags: []
-          confirmed_by:
-            name: John Smith
-            legal_name: JONATHAN WINGATE SMITH
-            email_address: john.smith@gmail.com
-            phone_number: '+12125551213'
-            status: PASSED
-            at: '2021-07-29 15:12 EST'
-            from: 'Metarie, LA USA'
-            verification_details:
-              mobile_provided: true
-              mobile_risk_score: 0.32
-              id_provided: true
-              id_risk_score: 0.18
-              name_match: 0.82
-              flags:
-                - Name on gov't issued ID is below match threshold
-                - Phone number is not associated with this individual
-          value:
-            id: qyiyyPTZB9g
-            client_metadata:
-              internal_id: '309182313'
-              group_id: ds839jdad
-            wire_instructions:
-              bank_name: JP MORGAN CHASE
-              bank_id_code: '021000021'
-              id_code_type: ABA
-              name_on_account: Smith Family Trust LLC
-              beneficiary_address: '3624 Dauphine St, New Orleans, LA 70117'
-              account_number: '103983019283'
-              ffc: FBO acct 3020449390-B
-              intermediary_bank_name: BANQUE DE SAVOIE S.A.
-              intermediary_bank_id_code: BSAVFR2C
-              intermediary_bank_id_code_type: SWIFT
-              intermediary_bank_account_number: '1120897764'
-            provided_by:
-              name: Ali Someperson
-              legal_name: ALLISON KATHRYN SOMEPERSON
-              email_address: alice@familyoffice.com
-              phone_number: '+12125551212'
-              status: PASSED
-              at: '2021-07-28 18:15 EST'
-              from: 'New York, NY USA'
-              verification_details:
-                mobile_provided: true
-                mobile_risk_score: 0.12
-                id_provided: true
-                id_risk_score: 0.08
-                name_match: 0.92
-                flags: []
-            confirmed_by:
-              name: John Smith
-              legal_name: JONATHAN WINGATE SMITH
-              email_address: john.smith@gmail.com
-              phone_number: '+12125551213'
-              status: PASSED
-              at: '2021-07-29 15:12 EST'
-              from: 'Metarie, LA USA'
-              verification_details:
-                mobile_provided: true
-                mobile_risk_score: 0.32
-                id_provided: true
-                id_risk_score: 0.18
-                name_match: 0.82
-                flags:
-                  - Name on gov't issued ID is below match threshold
-                  - Phone number is not associated with this individual
-      properties:
-        id:
-          type: string
-          minLength: 1
-        client_metadata:
-          type: object
-          description: 'If any metadata was passed in with this request, it will be returned in this field'
-        wire_instructions:
-          $ref: '#/components/schemas/WireInstructions'
-        provided_by:
-          $ref: '#/components/schemas/Verification'
-        confirmed_by:
-          $ref: '#/components/schemas/Verification'
-      required:
-        - id
-        - wire_instructions
-        - provided_by
-        - confirmed_by
-    WireInstructions:
-      description: 'Information required to generate a wire transfer request. If an intermediary bank is to be used, that information is also provided.'
-      type: object
-      x-examples:
-        Example Wire Instructions:
-          bank_name: JP MORGAN CHASE
-          bank_id_code: '021000021'
-          id_code_type: ABA
-          name_on_account: Smith Family Trust LLC
-          beneficiary_address: '3624 Dauphine St, New Orleans, LA 70117'
-          account_number: '103983019283'
-          ffc: FBO acct 3020449390-B
-          intermediary_bank_name: BANQUE DE SAVOIE S.A.
-          intermediary_bank_id_code: BSAVFR2C
-          intermediary_bank_id_code_type: SWIFT
-          intermediary_bank_account_number: '1120897764'
-          value:
-            bank_name: JP MORGAN CHASE
-            bank_id_code: '021000021'
-            id_code_type: ABA
-            name_on_account: Smith Family Trust LLC
-            beneficiary_address: '3624 Dauphine St, New Orleans, LA 70117'
-            account_number: '103983019283'
-            ffc: FBO acct 3020449390-B
-            intermediary_bank_name: BANQUE DE SAVOIE S.A.
-            intermediary_bank_id_code: BSAVFR2C
-            intermediary_bank_id_code_type: SWIFT
-            intermediary_bank_account_number: '1120897764'
-      properties:
-        bank_id_code:
-          type: string
-          description: The routing number for the bank (ABA or SWIFT)
-          example: JP MORGAN CHASE
-        bank_name:
-          type: string
-          description: The bank entity's legal name
-        id_code_type:
-          type: string
-          description: '''ABA'' or ''SWIFT'''
-          enum:
-            - ABA
-            - SWIFT
-        name_on_account:
-          type: string
-          example: SMITH FAMILY TRUST LLC
-          description: The name associated with this account
-        beneficiary_address:
-          type: string
-          example: '3624 Dauphine St, New Orleans, LA 70117'
-          description: The address associated witht this account
-        account_number:
-          type: string
-          description: 'The account number '
-        ffc:
-          type: string
-          description: For Further Credit information
-        intermediary_bank_name:
-          type: string
-        intermediary_bank_id_code:
-          type: string
-        intermediary_bank_id_code_type:
-          type: string
-        intermediary_bank_account_number:
-          type: string
-      required:
-        - bank_id_code
-        - bank_name
-        - id_code_type
-        - name_on_account
-        - beneficiary_address
-        - account_number
     Verification:
       description: ''
       type: object
@@ -678,6 +154,55 @@ components:
           type: string
           minLength: 1
           example: 'https://webhooks.test/member_updates'
+    CreateVerificationRequest:
+      description: ''
+      type: object
+      x-examples:
+        example-1:
+          origin: outlook
+          rep:
+            name: Henry Ford
+            emailAddress: brian.starke@gmail.com
+            phoneNumber: '+19174145090'
+          items:
+            - type: instructions
+      properties:
+        rep:
+          type: object
+          required:
+            - name
+            - emailAddress
+          description: The rep is the individual representing the items to be confirmed.
+          properties:
+            name:
+              type: string
+              example: Ellen Someperson
+              description: |-
+                The name of the individual representing the items to be confirmed. This will be evaluated against the information on their Gov't 
+                Issued ID.
+            emailAddress:
+              type: string
+              description: 'The email address of the representative, will be evaluated to ensure it''s associated with the individual who has provided a Gov''t Issued ID.'
+            phoneNumber:
+              type: string
+              format: E.164
+              example: '+12125551234'
+              description: 'Provide a mobile number for the rep if you have one. Must be in E.164 format (https://en.wikipedia.org/wiki/E.164)'
+        items:
+          type: array
+          uniqueItems: true
+          minItems: 1
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                minLength: 1
+            required:
+              - type
+      required:
+        - rep
+        - items
   examples: {}
 security:
   - api_key: []
